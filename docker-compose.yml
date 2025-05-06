@@ -9,7 +9,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      #- ./db_data:/var/lib/mysql          # ← persist data here
+      - ./db_data:/var/lib/mysql          # ← persist data here
       - ./sql:/docker-entrypoint-initdb.d
     networks:
       - appnet
@@ -35,8 +35,23 @@ services:
       - backend
     networks:
       - appnet
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: library-phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: rootpass
+    depends_on:
+      - db
+    networks:
+      - appnet
 
 networks:
   appnet:
 
-  #db_data:    # ← named volume for MySQL data
+  db_data:    # ← named volume for MySQL data
+
